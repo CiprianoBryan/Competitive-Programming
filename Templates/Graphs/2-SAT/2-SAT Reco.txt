@@ -1,0 +1,121 @@
+/************************************/
+vector<int> adj[ N ] ;
+bool vis[ N ] ;
+int tin[ N ] ;
+int low[ N ] ;
+int Time ;
+
+stack<int> q ;
+int id[ N ] ;
+int nroC ;
+
+void dfsT( int from ) {
+	vis[ from ] = true ;
+	tin[ from ] = low[ from ] = Time ++ ;
+	q.push( from ) ;
+	for( int to : adj[ from ] ) {
+		if( !tin[ to ] ) {
+			dfsT( to ) ;
+		}
+		if( vis[ to ] ) {
+			low[ from ] = min( low[ from ] , low[ to ] ) ;
+		}
+	}
+	if( tin[ from ] == low[ from ] ) {
+		while( true ) {
+			int v = q.top() ;
+			q.pop() ;
+			id[ v ] = nroC ;
+			vis[ v ] = false ;
+			if( from == v ) {
+				break ;
+			}
+		}
+		nroC ++ ;
+	}
+}
+
+void Tarjan( int n ) {
+	for( int i = 0 ; i < n ; i ++ ) {
+		if( tin[ i ] ) continue ;
+		dfsT( i ) ;
+	}
+}
+
+/************************************/
+vector<int> adjDAG[ N ] ;
+queue<int> qTS ; // inverse stack
+
+void dfsTS( int from ) {
+	vis[ from ] = true ;
+	for( int to : adjDAG[ from ] ) {
+		if( vis[ to ] ) continue ;
+		dfsTS( to ) ;
+	}
+	qTS.push( from ) ;
+}
+
+void TS( int n ) {
+	for( int i = n ; i >= 1 ; i -- ) {
+		if( vis[ i ] ) continue ;
+		dfsTS( i ) ;
+	}
+}
+
+/************************************/
+inline int toNode( int x ) {
+	if( x > 0 ) return 2*( x - 1 ) ;
+	return 2*( -x - 1 ) + 1 ;
+}
+
+/************************************/
+bool X[ 2*N ] ;
+
+void paint( int i ) {
+	X[ i ] = true ;
+	for( int j : adjDAG[ i ] ) {
+		if( X[ j ] == -1 ) {
+			paint( j ) ;
+		}
+	}
+}
+
+/************************************/
+
+bool SAT2( int n , int m ) {
+	int x , y ;
+	while( m -- ) {
+		scanf( "%d %d" , &x , &y ) ;
+		x = toNode( x ) ;
+		y = toNode( y ) ;
+		adj[ x^1 ].push_back( y ) ;
+		adj[ y^1 ].push_back( x ) ;
+	}
+	Tarjan( n ) ;
+	for( int x = 0 ; x < n ; x += 2 ) {
+		if( id[ x ] == id[ x^1 ] ) {
+			return false ;
+		}
+	}
+	memset( vis , 0 , sizeof vis ) ;
+	for( int x = 0 ; x < n ; x ++ ) {
+		for( int y : adj[ x ] ) {
+			if( id[ x ] != id[ y ] ) {
+				adjDAG[ x ].push_back( y ) ;
+			}
+		}
+	}
+	TS( n ) ;
+	memset( X , -1 , sizeof X ) ;
+	while( !qTS.empty() ) {
+		int node = qTS.front() ;
+		qTS.pop() ;
+		if( X[ node ] == -1 ) {
+			X[ node ] = false ;
+			paint( node^1 ) ;
+		}
+	}
+	return true ;
+}
+
+/************************************/

@@ -1,0 +1,66 @@
+//http://codeforces.com/gym/101462/problem/B
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 1e4 + 0 ;
+const int INF = 1e9 + 7;
+
+/************************************/
+inline long long C4( int n ) {
+	return 1LL*n*( n - 1 )*( n - 2 )*( n - 3 )/24 ;
+}
+
+/************************************/
+int mob[ N + 2 ] ;
+
+void buildMobius( int n ) {
+	mob[ 1 ] = 1 ;
+	for( int num = 2 ; num <= n ; num ++ ) {
+		int cantPrimes = 0 , num_ = num ;
+		bool isSqrt = false ;
+		for( int d = 2 ; d*d <= num_ ; d ++ ) {
+			if( num_%d != 0 ) continue ;
+			cantPrimes ++ ;
+			if( num_%( d*d ) == 0 ) {
+				isSqrt = true ;
+			}
+			for( ; num_%d == 0 ; num_ /= d ) ;
+		}
+		if( num_ != 1 ) {
+			cantPrimes ++ ;
+		}
+		if( !isSqrt ) {
+			mob[ num ] = (cantPrimes&1) ? -1 : 1 ;
+		}
+	}
+}
+
+/************************************/
+int cant[ N + 2 ] ;
+int cantM[ N + 2 ] ;
+
+int main() {
+	freopen( "b.in" , "r" , stdin ) ;
+	int n , num ;
+	buildMobius( N ) ;
+	while( cin >> n ) {
+		memset( cant , 0 , sizeof cant ) ;
+		memset( cantM , 0 , sizeof cantM ) ;
+		for( int i = 0 ; i < n ; i ++ ) {
+			scanf( "%d" , &num ) ;
+			cant[ num ] ++ ;
+		}
+		for( int num = 1 ; num <= N ; num ++ ) {
+			for( int mult = num ; mult <= N ; mult += num ) {
+				cantM[ num ] += cant[ mult ] ;
+			}
+		}
+		long long ans = 0 ;
+		for( int num = 1 ; num <= N ; num ++ ) {
+			ans += mob[ num ]*C4( cantM[ num ] ) ;
+		}
+		printf( "%lld\n" , ans ) ;
+	}
+
+	return 0 ;
+}

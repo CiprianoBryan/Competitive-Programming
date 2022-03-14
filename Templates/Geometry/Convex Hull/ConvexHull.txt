@@ -1,0 +1,51 @@
+/*********************************/
+struct Point {
+	int x , y ;
+	Point() {}
+	Point( int x , int y ) :
+		x( x ) , y( y ) {}
+	friend Point operator - ( Point p1 , Point p2 ) {
+		return Point( p1.x - p2.x , p1.y - p2.y ) ;
+	}
+	friend bool operator < ( Point p1 , Point p2 ) {
+		return ( p1.y == p2.y ? p1.x < p2.x : p1.y < p2.y ) ;
+	}
+} ;
+
+typedef Point Vector ;
+
+double norma( Vector v ) {
+	return sqrt( 1LL*v.x*v.x + 1LL*v.y*v.y ) ;
+}
+
+double cross( Vector v1 , Vector v2 ) {
+	return 1LL*v1.x*v2.y - 1LL*v2.x*v1.y ;
+}
+
+/*********************************/
+vector<Point> ConvexHull( vector<Point> P ) {
+	if( P.size() < 3 ) return P ;
+	Point p = *( min_element( P.begin() , P.end() ) ) ;
+	sort( P.begin() , P.end() , [p]( Point p1 , Point p2 ){
+		double area = cross( p1 - p , p2 - p ) ;
+		if( area == 0 ) return norma( p1 - p ) < norma( p2 - p ) ;
+		return area > 0 ;
+	}) ;
+	vector<Point> C ;
+	C.push_back( P[ 0 ] ) ;
+	C.push_back( P[ 1 ] ) ;
+	int it = 2 , szC = 2 ;
+	while( it < P.size() ) {
+		if( szC > 1 && cross( P[ it ] - C[ szC - 1 ] , C[ szC - 2 ] - C[ szC - 1 ] ) <= 0 ) {
+			C.pop_back() ;
+			szC -- ;
+		} else {
+			C.push_back( P[ it ] ) ;
+			szC ++ ;
+			it ++ ;
+		}
+	}
+	return C ;
+}
+
+/*********************************/

@@ -1,0 +1,50 @@
+/********************************/
+Teorema de Euler
+
+a^phi(n) = 1 (mod n) / a y n son coprimos
+a^x % M -> a^(x mod phi(M)) % M
+
+/********************************/
+Teorema de Wilson
+
+(p-1)! = -1 (mod p) / p es primo
+
+/****************************************/
+Teorema de Lucas
+
+Comb(n,k) % p / p es primo
+n = nm*p^m + .. + n2*p^2 + n1*p + n0
+k = km*p^m + .. + k2*p^2 + k1*p + k0
+Comb(n,k) = PROD[i:0->m]( Comb(ni,ki) )(mod p)
+
+/****************************************/
+Teorema Chino del Resto(Chinese Remainder) :
+
+m1, m2, m3, ..., mn todos coprimos dos a dos
+M = m1*m2*...*mn
+
+x = x1(mod m1)
+x = x2(mod m2)
+...
+x = xn(mod mn)
+
+Queremos encontrar y / x = y(mod M)
+y = SUM[i:1->n]( xi*(M/mi)*(M/mi)^-1(%mi) )(mod M)
+
+/*****************/
+Alicacion de TCR :
+
+Queremos: X mod M / M = p1*p2*...*pk /descomposicion en primos
+X = (X%p1 = x1)(mod p1)
+X = (X%p2 = x2)(mod p2)
+...
+X = (X%pk = xk)(mod pk)
+
+X%M = SUM[i:1->k]( xi*(M/pi)*(M/pi)^-1(%pi) )(mod M)
+
+/****************************************/
+
+
+Complexity:
+
+Teorema de Lucas / Query: O( log(n) ) , PreProcess: O( p*log( p ) )

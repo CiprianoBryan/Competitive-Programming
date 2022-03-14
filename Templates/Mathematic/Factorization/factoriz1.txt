@@ -1,0 +1,23 @@
+/************************************/
+vector<int> DPth ;
+vector<int> ExpD ;
+
+void fact( int num ) {
+	for( int i = 0 ; e2( Pth[ i ] ) <= num ; i ++ ) {
+		if( num%Pth[ i ] != 0 ) continue ;
+		int div = Pth[ i ] ;
+		int exp = 0 ;
+		while( num%div == 0 ) {
+			num /= div ;
+			exp ++ ;
+		}
+		DPth.push_back( div ) ;
+		ExpD.push_back( exp ) ;
+	}
+	if( num != 1 ) {
+		DPth.push_back( num ) ;
+		ExpD.push_back( 1 ) ;
+	}
+}
+
+/************************************/

@@ -1,0 +1,68 @@
+// http://codeforces.com/gym/101464/attachments
+#include <bits/stdc++.h>
+#define REP(i, n) for(int i = 0; i < n; i++)
+#define FOR(i, a, b) for (int i = a; i <= b; i++)
+#define CLEAR(V, value) memset(t, value, sizeof(t))
+#define ALL(v) v.begin(), v.end()
+#define SZ(v) ((int)(v).size())
+#define TEST(x) cerr << "test " << #x << " " << x << endl;
+#define sc(x) scanf("%d", &x)
+using namespace std ;
+
+typedef long long Long;
+typedef vector<int> vInt;
+typedef pair<int,int> Pair;
+
+const int N = 1e3 + 2 ;
+const int INF = 1e9 + 7 ;
+const int MOD = 1e9 + 7 ;
+const double EPS = 1e-8 ;
+
+/************************************/
+int R[ N ][ N ] ;
+int C[ N ][ N ] ;
+
+bool used[ N ][ N ] ;
+bool memo[ N ][ N ] ;
+
+bool dp( int n , int m ) {
+	if( n == 0 || m == 0 ) return false ;
+	if( used[ n ][ m ] ) return memo[ n ][ m ] ;
+	used[ n ][ m ] = true ;
+	bool &ans = memo[ n ][ m ] = false ;
+	if( !( R[ n ][ 1 ]^R[ n ][ m + 1 ] ) ) {
+		ans |= ( !dp( n - 1 , m ) ) ;
+	}
+	if( !( C[ 1 ][ m ]^C[ n + 1 ][ m ] ) ) {
+		ans |= ( !dp( n , m - 1 ) ) ;
+	}
+	return ans ;
+}
+
+int main() {
+	freopen( "h.in" , "r" , stdin ) ;
+	int n , num ;
+	while( cin >> n ) {
+		for( int i = 1 ; i <= n ; i ++ ) {
+			for( int j = 1 ; j <= n ; j ++ ) {
+				scanf( "%d" , &num ) ;
+				R[ i ][ j ] = (num&1) ;
+				C[ i ][ j ] = (num&1) ;
+			}
+		}
+		for( int i = 1 ; i <= n ; i ++ ) {
+			for( int j = n ; j >= 1 ; j -- ) {
+				R[ i ][ j ] ^= R[ i ][ j + 1 ] ;
+			}
+		}
+		for( int j = 1 ; j <= n ; j ++ ) {
+			for( int i = n ; i >= 1 ; i -- ) {
+				C[ i ][ j ] ^= C[ i + 1 ][ j ] ;
+			}
+		}
+		memset( used , 0 , sizeof used ) ;
+		printf( "%c\n" , dp( n , n ) ? 'W' : 'L' ) ;
+	}
+	
+	return 0 ;
+}

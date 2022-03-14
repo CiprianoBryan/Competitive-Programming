@@ -1,0 +1,9 @@
+*borde: prefijo y sufijo a la vez de una cadena 
+*un borde no puede ser toda la cadena
+
+F[ i ] : longitud del borde mas largo de T[ 0 .. i ]
+Z[ i ] : longitud de la subcadena mas larga que comienza en i y es tambien un prefijo.
+
+*Z[ 0 ] = 0
+*string = ax10 , Z[ 1 ] = 9 , Z[ 2 ] = 8 ...
+

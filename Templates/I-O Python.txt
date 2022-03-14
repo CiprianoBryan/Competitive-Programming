@@ -1,0 +1,20 @@
+line = input() # se lee una linea de input como cadena
+mylist = input().split() # mylist(lista) contiene las variables que se leen en una linea y las separa por espacios, cada variable es un string
+mylist = [ int(x) for x in input().split() ] # mylist(lista) contiene las variables parseadas como enteros
+a, b, c = [A, B, C] # las variables a, b, c contendran los valores de las variables dentro del vector siguiendo el orden
+
+print("Hola a %d personas %d %d" % (5, 1, 2)) # impresion de valores implicitamente
+print("Hola a {0} personas {1} {2}".format(5, 1, 2)) # impresion de valores implicitamente
+
+for index, value in enumerate(mylist): # extrae el indice y valor de las variables dentro de la lista
+for key, value in mymap.items(): # extrae la llave y valor de las variables dentro del mapa (Python 3.x)
+for key, value in mymap.iteritems(): # extrae la llave y valor de las variables dentro del mapa (Python 2.x)
+
+import sys
+sys.stdin = open("a.in") # abrir archivo para su lectura
+
+while True: # several testcases
+	try:
+		# actions
+	except Exception as e:
+		break

@@ -1,0 +1,7 @@
+https://codeforces.com/blog/entry/16205
+
+* f = (x1 or y1)^(x2 or y2)^ ... ^(xn or yn)
+* Nosotros tendremos un grafo con 2*n vertices
+* Por cada (xi or yi) agregaremos dos bordes dirigidos
+	(x1 or y1) .=. (not_x1 -> y1) .=. (not_y1 -> x1)
+* f sera no satisfacible si ambos xi y not_xi estan en el mismo SCC

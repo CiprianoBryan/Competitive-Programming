@@ -1,0 +1,3 @@
+Complexity: O( n + m )
+https://www.geeksforgeeks.org/biconnected-components/
+* Diferentes BC pueden compartir algun nodo en comun

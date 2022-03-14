@@ -1,0 +1,8 @@
+* phillai[ n ] = SUM[i:1->n]( gcd( i , n ) )
+* Bertrand :
+	- En combinatoria , el problema de la votación de Bertrand es la pregunta: 
+	"En una elección donde el candidato A recibe p votos y el candidato B recibe q votos con p  >  q , 
+	¿cuál es la probabilidad de que A esté estrictamente por delante de B durante todo el conteo?" 
+	La respuesta es: ( p - q )/( p + q )
+	- Total de numero de distribuciones donde A siempre esta por delante de B : 
+	C( n = (p + q) , p )*(p - q)/( p + q )

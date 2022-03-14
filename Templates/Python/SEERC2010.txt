@@ -1,0 +1,24 @@
+import sys
+
+sys.stdin = open("A.IN")
+
+while True:
+    try:
+        m,n=input().split()
+        n=int(n)
+        m=int(m)
+    except Exception as e:
+        break
+    
+    nums = [1]*m
+    for _ in range(n):
+        for i, x in enumerate(input().split()):
+            x=int(x)
+            nums[i] *= x
+    
+    ans, best = 0, nums[0]
+    for i in range(1,m):
+        if nums[i] >= best:
+            best = nums[i]
+            ans = i
+    print(ans+1)

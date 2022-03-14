@@ -1,0 +1,16 @@
+/************************************/
+int ddo[ N ] ;
+
+void sieve( int n ) {
+	for( int i = 4 ; i <= n ; i += 2 ) {
+		ddo[ i ] = 2 ;
+	}
+	for( int num = 3 ; num*num <= n ; num += 2 ) {
+		if( ddo[ num ] ) continue ;
+		for( int dor = num*num ; dor <= n ; dor += 2*num ) {
+			ddo[ dor ] = num ;
+		}
+	}
+}
+
+/************************************/

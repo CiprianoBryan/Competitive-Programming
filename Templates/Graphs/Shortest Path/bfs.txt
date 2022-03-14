@@ -1,0 +1,21 @@
+/************************************/
+vector<int> adj[ N ] ;
+int dist[ N ] ;
+
+void bfs( int node ) {
+	queue<int> q ;
+	q.push( node ) ;
+	dist[ node ] = 0 ;
+	while( !q.empty() ) {
+		int a = q.front() ;
+		q.pop() ;
+		for( int b : adj[ a ] ) {
+			if( dist[ b ] > dist[ a ] + 1 ) {
+				dist[ b ] = dist[ a ] + 1 ;
+				q.push( b ) ;
+			}
+		}
+	}
+}
+
+/************************************/

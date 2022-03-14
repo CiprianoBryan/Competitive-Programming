@@ -1,0 +1,91 @@
+//https://www.hackerrank.com/contests/university-codesprint-3/challenges/bobs-game
+#include<bits/stdc++.h>
+using namespace std ;
+
+const int N = 1e3 + 2 ;
+const int INF = 1e9 + 7 ;
+
+int t , n ;
+char c[ N ][ N ] ;
+int memo[ N ][ N ] ;
+bool used[ N ][ N ] ;
+int grundy_game , nroFMW ;
+int dx[ 3 ] = { 0 , -1 , -1 } ;
+int dy[ 3 ] = { -1 , 0 , -1 } ;
+
+inline bool val( int x , int y ) {
+	bool a = 1 <= x && x <= n ;
+	bool b = 1 <= y && y <= n ;
+	return a && b ;
+}
+
+inline void merge( set<int> &values , int &ans ) {
+	for( ; values.count( ans ) ; ans ++ ) ;
+}
+
+int grundy( int x , int y ) {
+	if( used[ x ][ y ] ) return memo[ x ][ y ] ;
+	used[ x ][ y ] = true ;
+	int &ans = memo[ x ][ y ] = 0 ;
+	set<int> values ;
+	for( int d = 0 ; d < 3 ; d ++ ) {
+		int x_ = x + dx[ d ] , y_ = y + dy[ d ] ;
+		if( !val( x_ , y_ ) || c[ x_ ][ y_ ] == 'X' ) continue ;
+		values.insert( grundy( x_ , y_ ) ) ;
+	}
+	merge( values , ans ) ;
+	return ans ;
+}
+
+int cnt_moves() {
+	int cnt = 0 ;
+	if( grundy_game == 0 ) return 0 ;
+	for( int x = 1 ; x <= n ; x ++ ) {
+		for( int y = 1 ; y <= n ; y ++ ) {
+			if( c[ x ][ y ] == 'K' ) {
+				for( int d = 0 ; d < 3 ; d ++ ) {
+					int x_ = x + dx[ d ] , y_ = y + dy[ d ] ;
+					if( !val( x_ , y_ ) || c[ x_ ][ y_ ] == 'X' ) continue ;
+					if( ( grundy_game^grundy( x , y )^grundy( x_ , y_ ) ) == 0 ) {
+						cnt ++ ;
+					}
+				}
+			}
+		}
+	}
+	return cnt ;
+}
+
+void Clear() {
+	for( int i = 1 ; i <= n ; i ++ ) {
+		for( int j = 1 ; j <= n ; j ++ ) {
+			used[ i ][ j ] = false ;
+		}
+	}
+}
+
+int main() {
+	cin >> t ;
+	while( t -- ) {
+		scanf( "%d" , &n ) ;
+		for( int i = 1 ; i <= n ; i ++ ) {
+			for( int j = 1 ; j <= n ; j ++ ) {
+				scanf( " %c" , &c[ i ][ j ] ) ;
+			}
+		}
+		Clear() ;
+		grundy_game = 0 ;
+		for( int i = 1 ; i <= n ; i ++ ) {
+			for( int j = 1 ; j <= n ; j ++ ) {
+				if( c[ i ][ j ] == 'K' ) {
+					grundy_game ^= grundy( i , j ) ;
+				}
+			}
+		}
+		nroFMW = cnt_moves() ;
+		if( grundy_game == 0 ) printf( "LOSE\n" ) ;
+		else printf( "WIN %d\n" , nroFMW ) ;
+	}
+	
+	return 0 ;
+}

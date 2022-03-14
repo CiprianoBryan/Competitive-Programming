@@ -1,0 +1,15 @@
+/************************************/
+map<int,int> comp ; // compress[ numero ] = num_comprimido
+int orig[ N + 1 ] ; // original[ num_comprimido ] = numero
+set<int> nums ;     // numeros [ -10^9 , 10^9 ]
+
+void compress() {
+	int y = 0 ;
+	for( int x : nums ) {
+		comp[ x ] = y ;
+		orig[ y ] = x ;
+		y ++ ;
+	}
+}
+
+/************************************/

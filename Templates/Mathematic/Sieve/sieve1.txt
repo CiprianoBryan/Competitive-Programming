@@ -1,0 +1,18 @@
+/************************************/
+bool P[ N ] ;
+vector<int> Pth ;
+
+void sieve( int n ) {
+	for( int i = 2 ; i <= n ; i ++ ) {
+		P[ i ] = true ;
+	}
+	for( int num = 2 ; num <= n ; num ++ ) {
+		if( !P[ num ] ) continue ;
+		Pth.push_back( num ) ;
+		for( int mult = 2*num ; mult <= n ; mult += num ) {
+			P[ mult ] = false ;
+		}
+	}
+}
+
+/************************************/

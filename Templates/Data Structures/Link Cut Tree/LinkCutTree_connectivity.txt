@@ -1,0 +1,167 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define read() freopen("input.txt", "r", stdin)
+#define write() freopen("output.txt", "w", stdout)
+#define ff(i,a,b) for(int i = (a); i <= (b); i++)
+#define fr(i,a,b) for(int i = (a); i >= (b); i--)
+#define REP( i , n ) for( int i = 0 ; i < n ; i++ )
+#define sc( x ) scanf( "%d" , &x )
+#define sc2( x , y ) scanf( "%d%d" , &x , &y )
+#define pf( x ) printf( "%d\n" , x )
+#define rrc( x ) return cout << x , 0 ;
+#define all( v ) v.begin(),v.end()
+#define all_r( v ) v.rbegin() , v.rend()
+#define fi first
+#define se second
+#define endl '\n'
+#define SZ(a) int(a.size())
+#define pb push_back
+#define pi acos(-1.0)
+#define e2( x ) ( 1LL*( x )*( x ) )
+#define r2( x ) sqrt( 1.0*( x ) )
+#define ones(x) __builtin_popcount(x)
+#define ddd cout << "despues" << endl ;
+#define sss cout << "------------------" << endl ;
+#define aaa cout << "antes" << endl ;
+#define da( a , b ) ( (a)/(b) - ( (a) < 0 && (a)%(b) != 0 ) )
+#define ceil_( a , b ) ( da( (a) , (b) ) + ((a)%(b) > 0) )
+#define L( n ) 2 * n
+#define R( n ) 2 * n + 1
+#define A 1 , 0 , n - 1
+
+typedef double db ;
+typedef long double ld ;
+typedef long long ll ;
+typedef vector<int> vi ;
+typedef vector<vi> vvi ;
+typedef vector<ll> vl ;
+typedef vector<bool> vb ;
+typedef pair<int,int> pii ;
+typedef vector<pii> vpii ;
+const ld EPS = 1e-8 ;
+const int INF = (int)( INT_MAX - 100 ) ;
+const ll mod = (int)( 1e+9 + 7 ) ;
+const int N = (int)( 0 ) ;
+const int V = (int)( 1e5 + 2 ) ;
+int days_month[ 12 ] = { 31 , 28 , 31 , 30 , 31 , 30 , 31 , 31 , 30 , 31 , 30 , 31 };
+
+struct Node {
+	int left = 0 ;
+	int rigth = 0 ;
+	int parent = 0 ;
+	bool revert = 0 ;
+} ;
+
+Node node[ V ] ;
+char type[ 10 ] ;
+int u , v ;
+
+bool isRoot( int u ) {
+	int p = node[ u ].parent ;
+	return !p || ( node[ p ].left != u && node[ p ].rigth != u ) ;
+}
+
+void push( int x ) {
+	if( !node[ x ].revert ) return ;
+	node[ x ].revert = false ;
+	swap( node[ x ].left , node[ x ].rigth ) ;
+	if( node[ x ].left ) node[ node[ x ].left ].revert ^= 1 ;
+	if( node[ x ].rigth ) node[ node[ x ].rigth ].revert ^= 1 ;
+}
+
+void connect( int ch , int p , int isLeftChild ) {
+	if( ch ) node[ ch ].parent = p ;
+	if( isLeftChild == -1 ) return ;
+	if( isLeftChild ) node[ p ].left = ch ;
+	else node[ p ].rigth = ch ;
+}
+
+void rotate( int x ) {
+	int p = node[ x ].parent ;
+	int g = node[ p ].parent ;
+	bool isRootP = isRoot( p ) ;
+	bool leftChildX = x == node[ p ].left ;
+	connect( leftChildX ? node[ x ].rigth : node[ x ].left , p , leftChildX ) ;
+	connect( p , x , !leftChildX ) ;
+	connect( x , g , !isRootP ? p == node[ g ].left : -1 ) ;
+}
+
+void splay( int x ) {
+	while( !isRoot( x ) ) {
+		int p = node[ x ].parent ;
+		int g = node[ p ].parent ;
+		if( !isRoot( p ) )
+			push( g ) ;
+		push( p ) ;
+		push( x ) ;
+		if( !isRoot( p ) ) {
+			bool onLeft1 = x == node[ p ].left ;
+			bool onLeft2 = p == node[ g ].left ;
+			rotate( onLeft1 == onLeft2 ? p : x ) ;
+		}
+		rotate( x ) ;
+	}
+	push( x ) ;
+}
+
+int expose( int x ) {
+	int last = 0 ;
+	for( int y = x ; y ; y = node[ y ].parent ) {
+		splay( y ) ;
+		node[ y ].left = last ;
+		last = y ;
+	}
+	splay( x ) ;
+	return last ;
+}
+
+void makeRoot( int x ) {
+	expose( x ) ;
+	node[ x ].revert ^= 1 ;
+}
+
+bool connected( int x , int y ) {
+	if( x == y ) return true ;
+	expose( x ) ;
+	expose( y ) ;
+	return node[ x ].parent ;
+}
+
+void link( int x , int y ) {
+	if( connected( x , y ) ) return ;
+	makeRoot( x ) ;
+	node[ x ].parent = y ;
+}
+
+void cut( int x , int y ) {
+	makeRoot( x ) ;
+	expose( y ) ;
+	if( node[ y ].rigth != x || node[ x ].left || node[ x ].rigth ) return ;
+	node[ node[ y ].rigth ].parent = 0 ;
+	node[ y ].rigth = 0 ;
+}
+
+int main()
+{
+//	ios_base::sync_with_stdio(0);
+	int n , m ;
+	cin >> n >> m ;
+	REP( i , m ) {
+		scanf( "%s" , &type ) ;
+		if( type[ 0 ] == 'a' ) {
+			sc2( u , v ) ;
+			link( u , v ) ;
+		}
+		if( type[ 0 ] == 'r' ) {
+			sc2( u , v ) ;
+			cut( u , v ) ;
+		}
+		if( type[ 0 ] == 'c' ) {
+			sc2( u , v ) ;
+			if( connected( u , v ) ) printf( "YES\n" ) ;
+			else printf( "NO\n" ) ;
+		}
+	}
+
+	return 0 ;
+}

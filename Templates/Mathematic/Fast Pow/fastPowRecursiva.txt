@@ -1,0 +1,9 @@
+/************************************/
+long long Pow( int b , int e ) {
+	if( e == 0 ) return 1 ;
+	if( e&1 ) return Mult( b , Pow( b , e - 1 ) ) ;
+	long long a = Pow( b , e/2 ) ;
+	return Mult( a , a ) ;
+}
+
+/************************************/

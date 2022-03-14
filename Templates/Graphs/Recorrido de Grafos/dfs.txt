@@ -1,0 +1,13 @@
+/************************************/
+vector<int> adj[ N ] ;
+bool vis[ N ] ;
+
+void dfs( int from ) {
+	vis[ from ] = true ;
+	for( int to : adj[ from ] ) {
+		if( vis[ to ] ) continue ;
+		dfs( to ) ;
+	}
+}
+
+/************************************/

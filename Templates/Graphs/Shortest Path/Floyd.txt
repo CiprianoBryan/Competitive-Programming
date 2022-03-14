@@ -1,0 +1,22 @@
+/************************************/
+int dist[ N ][ N ] ;
+
+void init( int n ) {
+	for( int a = 1 ; a <= n ; a ++ ) {
+		for( int b = 1 ; b <= n ; b ++ ) {
+			dist[ a ][ b ] = INF ;
+		}
+	}
+}
+
+void Floyd( int n ) {
+	for( int me = 1 ; me <= n ; me ++ ) {
+		for( int a = 1 ; a <= n ; a ++ ) {
+			for( int b = 1 ; b <= n ; b ++ ) {
+				dist[ a ][ b ] = min( dist[ a ][ b ] , dist[ a ][ me ] + dist[ me ][ b ] ) ;
+			}
+		}
+	}
+}
+
+/************************************/

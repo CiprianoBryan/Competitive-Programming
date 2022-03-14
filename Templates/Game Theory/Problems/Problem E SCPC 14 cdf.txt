@@ -1,0 +1,39 @@
+#include<bits/stdc++.h>
+using namespace std ;
+
+const int N = 1e3 + 2 ;
+const int INF = 1e9 + 7 ;
+
+int t , n , k ;
+int memo[ 52 ] ;
+bool used[ 52 ] ;
+
+inline void merge( set<int> &values , int &ans ) {
+	for( ; values.count( ans ) ; ans ++ ) ;
+}
+
+int grundy( int n ) {
+	if( n < k ) return 0 ;
+	if( used[ n ] ) return memo[ n ] ;
+	used[ n ] = true ;
+	int &ans = memo[ n ] = 0 ;
+	set<int> values ;
+	for( int left = 0 ; left <= n - k ; left ++ ) {
+		int right = n - left - k ;
+		values.insert( grundy( left )^grundy( right ) ) ;
+	}
+	merge( values , ans ) ;
+	return ans ;
+}
+
+int main() {
+	cin >> t ;
+	for( int g = 1 ; g <= t ; g ++ ) {
+		scanf( "%d %d" , &n , &k ) ;
+		memset( used , 0 , sizeof used ) ;
+		if( !grundy( n ) ) printf( "Case %d: Losing\n" , g ) ;
+		else printf( "Case %d: Winning\n" , g ) ;
+	}
+	
+	return 0 ;
+}

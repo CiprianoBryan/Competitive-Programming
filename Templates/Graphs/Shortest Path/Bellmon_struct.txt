@@ -1,0 +1,44 @@
+/************************************/
+struct str {
+	int A , B , w ;
+} ;
+
+vector<str> Edges ;
+int dist[ N ] ;
+
+bool bellmon( int n ) {
+	for( int i = 1 ; i <= n ; i ++ ) {
+		dist[ i ] = INF ;
+	}
+	for( int i = 1 ; i <= n - 1 ; i ++ ) {
+		for( str edge : Edges ) {
+			if( dist[ edge.A ] == INF ) continue ;
+			if( dist[ edge.B ] > dist[ edge.A ] + edge.w ) {
+				dist[ edge.B ] = dist[ edge.A ] + edge.w ;
+			}
+		}
+	}
+	for( str edge : Edges ) {
+		if( dist[ edge.A ] == INF ) continue ;
+		if( dist[ edge.B ] > dist[ edge.A ] + edge.w ) {
+			return true ;
+		}
+	}
+	return false ;
+}
+
+/************************************/
+
+int main() {
+	int n , m ;
+	cin >> n >> m ;
+	int u , v , w ;
+	while( m -- ) {
+		scanf( "%d %d %d" , &u , &v , &w ) ;
+		Edges.push_back( { u , v , w } ) ;
+		Edges.push_back( { v , u , w } ) ;
+	}
+	bool existCN = bellmon( n ) ;
+
+   return 0 ;
+}

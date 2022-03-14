@@ -1,0 +1,13 @@
+/************************************/
+int Comb[ N ][ N ] ;
+
+void buildComb( int n ) {
+	for( int i = 0 ; i <= n ; i ++ ) {
+		for( int j = 0 ; j <= i ; j ++ ) {
+			if( i == j || j == 0 ) Comb[ i ][ j ] = 1 ;
+			else Comb[ i ][ j ] = Sum( Comb[ i - 1 ][ j - 1 ] , Comb[ i - 1 ][ j ] ) ;
+		}
+	}
+}
+
+/************************************/

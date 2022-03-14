@@ -1,0 +1,7 @@
+/***********************************/
+int inverseMod( int num , int mod ) {
+	int x , y , g ;
+	gcdExt( num , x , mod , y , g ) ;
+	return ( x%mod + mod )%mod ;
+}
+/************************************/

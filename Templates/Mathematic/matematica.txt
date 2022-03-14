@@ -1,0 +1,102 @@
+/****************************************/
+Inversa Modular
+
+Inversa Modular de a modulo p
+*Existencia de inversa modular
+Si y solo si a y p son coprimos
+
+* Si a != 0 && p isPrime : 
+a^(p-1) = 1(mod p)
+a^(p-2)*p = 1(mod p)
+inversa modular : a^(p-2)
+
+* Si p no es primo :
+inversa modular : " a^( phi(p)-1 ) "
+
+/****************************************/
+Phi de Euler
+
+*Cantidad de numeros menores y coprimos con n
+Phi es una funcion multiplicativa
+phi(a*b) = phi(a)*phi(b) 
+
+/****************************************/
+Sigma
+
+*Cantidad de divisores distintos de n
+
+/****************************************/
+Extendido de Euclides:
+
+Dado los enteros a y b entonces gcd(a,b) es el menor entero positivo que
+resulta de una combinacion lineal de a y b (a*x + b*y, donde x e y son enteros)
+-> a*x + b*y = gcd(a,b) ... (1)
+- a*x + b*y = d , sabemos que gcd(a,b) = gcd(b,a%b)
+- a1*x1 + b1*y1 = d , donde (a1 = b) y (b1 = a%b)
+  b*x1 + (a%b)*y1 = d ... (2) , hacemos que q = a/b
+  b*x1 + (a - q*b) = d
+  a*y1 + b*(x1 - q*y1) = d ... (3)
+(1) y (3):
+  x = y1
+  y = x1 - (a/b)*y1
+caso base:
+  a*1 + 0*0 = gcd(a,0) = a = d
+
+pseudocodigo:
+gcdExte(a, &x, b, &y, &d): ... (1)
+	if b == 0 :
+		x = 1, y = 0, d = a
+		return
+	gcdExt(b, y, a%b, x, g) ... (2)
+	y = y - (a/b)*x ... (3)
+END
+
+/****************************************/
+Ecuacion Diofántica Lineal:
+
+Dados los enteros a,b y c, hallar los valores de los enteros x e y, en:
+	a*x + b*y = c
+Teorema:
+Sea d = gcd(a,b), entonces la ecuacion solo tendrá solución entera si d|c (d divide a c)
+Demostracion:
+d|a y d|b -> d|(a*x + b*y) -> d|c
+
+Sabemos: a*n + b*m = gcd(a,b) , obtenemos n, m con el Extendido de Euclides
+a*n *(c/gcd(a,b)) + b*m *(c/gcd(a,b)) = c
+-> Sea x0, y0 una solucion de la ecuacion, donde:
+x0 = n*c/gcd(a,b) , y0 = m*c/gcd(a,b)
+a*x0 + b*y0 = c
+
+¿Cómo encontramos todas las soluciones para a*x + b*y = c ?
+a*n*c + b*m*c = gcd(a,b)*c , sumando y restando a*b*k, donde k es un entero
+a*n*c + b*m*c + a*b*k - a*b*k = gcd(a,b)*c
+a*( n*c/gcd(a,b) + b*k/gcd(a,b) ) + b*( m*c/gcd(a,b) - a*k/gcd(a,b) ) = c
+a*( x0 + b*k/gcd(a,b) ) + b*( y0 - a*k/gcd(a,b) ) = c , donde k = ...,-2,-1,0,1,2 ...
+
+/**********************************************/
+Pillai
+
+Pillai( n ) = SUM[k:1,n]( gcd( k , n ) )
+
+/**********************************************/
+Derangement
+
+!n = (n-1)*( !(n-1) + !(n-2) )
+
+/**********************************************/
+
+
+Complexity:
+
+sieve: O(N*loglogN)
+sieve: O(N)
+
+sigma, fact, phi: O(logN) , n <= 10^7
+sigma, fact, phi: O(sqrt(N)/logN) , n <= 10^14
+sigma, fact, phi: O(sqrt(N)) , n <= 10^14
+
+gcd, gcdExtendido: O(logN)
+
+PowFast and MultiplicationFast: O(log(e)*log(b)) , n,m <= 10^18
+Miller Rabin: O( k*log(n)^3 ) / k: numero de iteraciones , n <= 10^18
+Pollard Rho: O( n^(1/3) ) , n <= 10^18

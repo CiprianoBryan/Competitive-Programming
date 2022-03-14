@@ -1,0 +1,1 @@
+distance of Hamming, entre 2 cadenas de la misma longitud es la cantidad de letras diferentes

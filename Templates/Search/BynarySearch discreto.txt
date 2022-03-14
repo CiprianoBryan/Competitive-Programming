@@ -1,0 +1,13 @@
+/************************************/
+double bs() {
+	double l = 0, r = INF;
+	int nroIter = log2((r - l)/p) + 5;
+	for (int i = 0; i < nroIter; i ++) {
+		double me = (l + r)/2;
+		if (ok(me)) l = me;
+		else r = me;
+	}
+	return me;
+}
+
+/************************************/

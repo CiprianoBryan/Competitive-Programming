@@ -1,0 +1,16 @@
+/************************************/
+int F[ N ] ;
+
+int find( int u ) {
+	if( !F[ u ] ) return u ;
+	return F[ u ] = find( F[ u ] ) ;
+}
+
+void Union( int u , int v ) {
+	u = find( u ) ;
+	v = find( v ) ;
+	if( u == v ) return ;
+	F[ v ] = u ;
+}
+
+/************************************/

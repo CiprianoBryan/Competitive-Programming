@@ -1,0 +1,33 @@
+typedef pair<int,int> Pair ;
+
+/************************************/
+vector<Pair> adj[ N ] ;
+int dist[ N ] ;
+
+bool bellmon( int node , int n ) {
+	for( int u = 0 ; u <= n ; u ++ ) {
+		dist[ u ] = INF ;
+	}
+	dist[ node ] = 0 ;
+	for( int i = 1 ; i < n ; i ++ ) {
+		for( int u = 1 ; u <= n ; u ++ ) {
+			for( Pair edge : adj[ u ] ) {
+				if( dist[ u ] == INF ) continue ;
+				if( dist[ edge.first ] > dist[ u ] + edge.second ) {
+					dist[ edge.first ] = dist[ u ] + edge.second ;
+				}
+			}
+		}
+	}
+	for( int u = 1 ; u <= n ; u ++ ) {
+		for( Pair edge : adj[ u ] ) {
+			if( dist[ u ] == INF ) continue ;
+			if( dist[ edge.first ] > dist[ u ] + edge.second ) {
+				return true ;
+			}
+		}
+	}
+	return false ;
+}
+
+/************************************/

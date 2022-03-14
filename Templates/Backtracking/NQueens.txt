@@ -1,0 +1,77 @@
+#include <bits/stdc++.h>
+using namespace std ;
+
+const int N = 10 ;
+const int INF = 1e9 + 7;
+
+/************************************/
+char T[ N ][ N ] ;
+int n ;
+
+void DrawTable( int n ) {
+	printf( "-----------------------\n" ) ;
+	for( int i = 0 ; i < n ; i ++ ) {
+		for( int j = 0 ; j < n ; j ++ ) {
+			printf( "%c " , T[ i ][ j ] ) ;
+		}
+		printf( "\n" ) ;
+	}
+}
+
+/************************************/
+bool diag1[ 2*N - 1 ] ;
+bool diag2[ 2*N - 1 ] ;
+bool horiz[ N ] ;
+bool vert[ N ] ;
+
+void ColocarQueen( int x , int y ) {
+	T[ x ][ y ] = 'Q' ;
+	diag1[ x + y ] = true ;
+	diag2[ ( n - 1 - x ) + y ] = true ;
+	horiz[ x ] = true ;
+	vert[ y ] = true ;
+}
+
+void QuitQueen( int x , int y ) {
+	T[ x ][ y ] = '.' ;
+	diag1[ x + y ] = false ;
+	diag2[ ( n - 1 - x ) + y ] = false ;
+	horiz[ x ] = false ;
+	vert[ y ] = false ;
+}
+
+bool inAttack( int x , int y ) {
+	return horiz[ x ] || vert[ y ] || diag1[ x + y ] || diag2[ ( n - 1 - x ) + y ] ;
+}
+
+void backtrack( int nroQueens , int x , int y ) {
+	if( nroQueens == n ) {
+		DrawTable( n ) ;
+		return ;
+	}
+	if( x == n || y == n ) {
+		return ;
+	}
+	for( int i = x ; i < n ; i ++ ) {
+		for( int j = ( i == x ? y + 1 : 0 ) ; j < n ; j ++ ) {
+			if( !inAttack( i , j ) ) {
+				ColocarQueen( i , j ) ;
+				backtrack( nroQueens + 1 , i , j ) ;
+				QuitQueen( i , j ) ;
+			}
+		}
+	}
+}
+
+int main() {
+	printf( "INGRESE EL NUMERO N: " ) ;
+	scanf( "%d" , &n ) ;
+	for( int i = 0 ; i < n ; i ++ ) {
+		for( int j = 0 ; j < n ; j ++ ) {
+			T[ i ][ j ] = '.' ;
+		}
+	}
+	backtrack( 0 , 0 , 0 ) ;
+
+	return 0 ;
+}

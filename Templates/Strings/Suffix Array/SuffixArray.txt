@@ -1,0 +1,7 @@
+Complexity: O( n*log( n ) )
+
+* sa[ i^th ] => index
+* Rank[ index ] => i^th
+* L[ ith ] = LCP( ith , ith + 1 )
+* LCP( i , j ) = min( L[ ith ] , L[ ith + 1 ] ,... , L[ jth - 1 ] )
+* Nro de Substring distintos : n*( n + 1 )/2 - Sum[i:1->n]( L[ i ] )

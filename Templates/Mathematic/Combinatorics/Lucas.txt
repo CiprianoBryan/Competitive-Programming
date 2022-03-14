@@ -1,0 +1,12 @@
+/************************************/
+int Lucas( long long n , long long k ) {
+	if( n < k ) return 0 ;
+	long long ans = 1 ;
+	for( ; n ; n /= mod , k /= mod ) {
+		long long ni = n%mod , ki = k%mod ;
+		ans = mult( ans , mult( F[ ni ] , mult( Finv[ ki ] , Finv[ ni - ki ] , mod ) , mod ) , mod ) ;
+	}
+	return ans ;
+}
+
+/************************************/

@@ -1,0 +1,23 @@
+m : numero de bordes/aristas
+n : numeo de vertices
+En el peor de los casos : m = n^2
+
+dfs O( n + m )
+bfs O( n + m )
+
+dijkstra O( ( n + m )*log( n ) )
+bellmon O( n*m )
+floyd O( n^3 )
+spfa O( k*m ) k ~ 2
+Johnson O( n*m*log(n) )
+
+kruskal O( m*log( n ) )
+prim O( ( n + m )*log( n ) )
+
+SCC O( n + m )
+
+UF O( alfa( n ) ) ~ O( 5 ) -> O( 1 ) / alfa( n ) : inversa de la funcion: n = f(x) = A(x,x)
+
+Kosaraju O( n + m )
+Tarjan O( n + m )
+Topological Sort O( n )

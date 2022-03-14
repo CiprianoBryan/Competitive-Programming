@@ -1,0 +1,47 @@
+/************************************/
+struct Node {
+	Node *left = NULL;
+	Node *right = NULL;
+	int cant = 0;
+	Node() {}
+	Node(int cant, Node *l, Node *r):
+		cant(cant), left(l), right(r) {}
+};
+
+Node *tree[N];
+Node *null;
+
+Node* insert(Node *node, int b, int e, int pos) {
+	if (pos < b || e < pos) return node;
+	if (b == e) return new Node(node->cant + 1, null, null);
+	int me = (b + e) >> 1;
+	Node *l = insert(node->left, b, me, pos);
+	Node *r = insert(node->right, me + 1, e, pos);
+	return new Node(node->cant + 1, l, r);
+}
+
+int query(Node *node1, Node *node2, Node *node3, Node *node4, int b, int e, int pos) {
+	if (b == e) return b;
+	int me = (b + e) >> 1;
+	int cantLeft = node1->left->cant + node2->left->cant - node3->left->cant - node4->left->cant;
+	if (pos <= cantLeft)
+		return query(node1->left, node2->left, node3->left, node4->left, b, me, pos);
+	return query(node1->right, node2->right, node3->right, node4->right, me + 1, e, pos);
+}
+
+/************************************/
+
+void initTree() {
+	null = new Node;
+	null->left = null;
+	null->right = null;
+	tree[0] = null;
+}
+
+void dfs(int from, int parent) {
+	tree[from] = insert(tree[parent], 1, n, num[from]);
+	for (int to: adj[from]) {
+		if (to == parent) continue;
+		dfs(to, from);
+	}
+}

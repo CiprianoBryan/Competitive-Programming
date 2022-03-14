@@ -1,0 +1,3 @@
+mobius(n) = 1 si n es libre de cuadrados y tiene un número par de factores primos distintos.
+mobius(n) = -1 si n es libre de cuadrados y tiene un número impar de factores primos distintos.
+mobius(n) = 0 si n es divisible por algún cuadrado.

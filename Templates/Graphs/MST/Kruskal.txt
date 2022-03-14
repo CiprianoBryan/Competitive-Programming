@@ -1,0 +1,42 @@
+/************************************/
+int F[ N ] ;
+
+int find( int u ) {
+	if( !F[ u ] ) return u ;
+	return F[ u ] = find( F[ u ] ) ;
+}
+
+void Union( int u , int v ) {
+	u = find( u ) ;
+	v = find( v ) ;
+	if( u == v ) return ;
+	F[ v ] = u ;
+}
+
+/************************************/
+struct edge {
+	int u , v , d ;
+	friend bool operator < ( edge e1 , edge e2 ) {
+		return e1.d < e2.d ;
+	}
+} ;
+
+vector<edge> E ;
+
+int kruskal( int n ) {
+	if( n == 1 ) return 0 ;
+	sort( E.begin() , E.end() ) ;
+	int dist = 0 ;
+	int cant = 0 ;
+	for( edge e : E ){
+		if( find( e.u ) == find( e.v ) ) continue ;
+		cant ++ , dist += e.d ;
+		Union( e.u , e.v ) ;
+		if( cant == n - 1 ) {
+			return dist ;
+		}
+	}
+	return -1 ;
+}
+
+/************************************/

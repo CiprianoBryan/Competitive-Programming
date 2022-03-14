@@ -1,0 +1,11 @@
+/************************************/
+int Pow( int b , int e ) {
+	int prod = 1 ;
+	for( ; e != 0 ; e >>= 1 ) {
+		if( e&1 ) prod = Mult( prod , b ) ;
+		b = Mult( b , b ) ;
+	}
+	return prod ;
+}
+
+/************************************/

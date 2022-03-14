@@ -1,0 +1,154 @@
+//https://wcipeg.com/problem/ioi1112
+#include <bits/stdc++.h>
+using namespace std ;
+
+const int N = 2e5 + 2 ;
+const int logN = log2( N ) + 2 ;
+const int INF = 1e9 + 7 ;
+
+typedef long long Long ;
+typedef pair<int,int> Pair ;
+typedef pair<Long,Long> PairL ;
+typedef pair<PairL,int> PairP ;
+
+/************************************/
+vector<Pair> adj[ N ] ;
+bool isCentroid[ N ] ;
+int sz[ N ] ;
+
+void build_subtrees( int from , int parent ) {
+	sz[ from ] = 1 ;
+	for( Pair edge : adj[ from ] ) {
+		int to = edge.first ;
+		if( to == parent ) continue ;
+		if( isCentroid[ to ] ) continue ;
+		build_subtrees( to , from ) ;
+		sz[ from ] += sz[ to ] ;
+	}
+}
+
+int find_centroid( int from , int parent , int sz_total ) {
+	for( Pair edge : adj[ from ] ) {
+		int to = edge.first ;
+		if( to == parent ) continue ;
+		if( isCentroid[ to ] ) continue ;
+		if( sz[ to ] > sz_total/2 ) {
+			return find_centroid( to , from , sz_total ) ;
+		}
+	}
+	return from ;
+}
+
+vector<int> adjC[ N ] ;
+
+int buildCT( int from ) {
+	build_subtrees( from , 0 ) ;
+	int centroid = find_centroid( from , 0 , sz[ from ] ) ;
+	isCentroid[ centroid ] = true ;
+	for( Pair edge : adj[ centroid ] ) {
+		int to = edge.first ;
+		if( !isCentroid[ to ] ) {
+			int centroid_ = buildCT( to ) ;
+			adjC[ centroid ].push_back( centroid_ ) ;
+		}
+	}
+	return centroid ;
+}
+
+/************************************/
+int depth[ N ] ;
+Long dist[ N ] ;
+int st[ N ][ logN ] ;
+
+void dfsL( int cur , int fat , int niv , Long sumW ) {
+	depth[ cur ] = niv ;
+	dist[ cur ] = sumW ;
+	st[ cur ][ 0 ] = fat ;
+	for( Pair edge : adj[ cur ] ) {
+		int nxt = edge.first ;
+		int w = edge.second ;
+		if( nxt == fat ) continue ;
+		dfsL( nxt , cur , niv + 1 , sumW + w ) ;
+	}
+}
+
+void buildST( int n ) {
+	dfsL( 1 , 0 , 0 , 0 ) ;
+	for( int loglen = 1 , len = 2 ; len <= n ; loglen ++ , len <<= 1 ) {
+		for( int u = 1 ; u <= n ; u ++ ) {
+			if( !st[ u ][ loglen - 1 ] ) continue ;
+			int v = st[ u ][ loglen - 1 ] ;
+			st[ u ][ loglen ] = st[ v ][ loglen - 1 ] ;
+		}
+	}
+}
+
+int lca( int u , int v ) {
+	if( depth[ u ] < depth[ v ] ) swap( u , v ) ;
+	int lim = log2( depth[ u ] ) + 1 ;
+	int len = 1 << lim ;
+	for( int loglen = lim ; loglen >= 0 ; loglen -- , len >>= 1 ) {
+		if( depth[ u ] - len >= depth[ v ] ) {
+			u = st[ u ][ loglen ] ;
+		}
+	}
+	if( u == v ) return u ;
+	for( int loglen = lim ; loglen >= 0 ; loglen -- ) {
+		if( !st[ u ][ loglen ] ) continue ;
+		if( st[ u ][ loglen ] != st[ v ][ loglen ] ) {
+			u = st[ u ][ loglen ] ;
+			v = st[ v ][ loglen ] ;
+		}
+	}
+	return st[ u ][ 0 ] ;
+}
+
+/************************************/
+PairL Distance( int u , int v ) {
+	int z = lca( u , v ) ;
+	return { dist[ u ] + dist[ v ] - 2*dist[ z ] , depth[ u ] + depth[ v ] - 2*depth[ z ] } ;
+}
+
+/************************************/
+set<PairP> nodes[ N ] ;
+int n , k ;
+
+int dfsC( int from ) {
+	int ans = INF ;
+	nodes[ from ].insert( { { 0 , 0 } , from } ) ;
+	for( int to : adjC[ from ] ) {
+		ans = min( ans , dfsC( to ) ) ;
+		vector<PairP> tmp ;
+		for( PairP p : nodes[ to ] ) {
+			PairL Duv = Distance( from , p.second ) ;
+			tmp.push_back( { Duv , p.second } ) ;
+			auto pointer = nodes[ from ].lower_bound( { { k - Duv.first , 0 } , 0 } ) ;
+			if( pointer == nodes[ from ].end() || pointer->first.first + Duv.first != k ) continue ;
+			ans = min( ans , int( pointer->first.second + Duv.second ) ) ;
+		}
+		for( PairP &p : tmp ) {
+			nodes[ from ].insert( p ) ;
+		}
+	}
+	return ans ;
+}
+
+/************************************/
+
+int main() {
+	cin >> n >> k ;
+	int u , v , w ;
+	for( int i = 1 ; i < n ; i ++ ) {
+		scanf( "%d %d %d" , &u , &v , &w ) ;
+		u ++ , v ++ ;
+		adj[ u ].push_back( { v , w } ) ;
+		adj[ v ].push_back( { u , w } ) ;
+	}
+	buildST( n ) ;
+	int root = buildCT( 1 ) ;
+	int ans = dfsC( root ) ;
+	if( ans == INF ) ans = -1 ;
+	cout << ans ;
+
+	return 0 ;
+}

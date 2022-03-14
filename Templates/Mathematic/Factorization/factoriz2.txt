@@ -1,0 +1,22 @@
+/************************************/
+vector<int> DPth ;
+vector<int> ExpD ;
+
+void fact( int num ) {
+	while( ddo[ num ] ) {
+		int exp = 0 ;
+		int div = ddo[ num ] ;
+		while( num%div == 0 ) {
+			num /= div ;
+			exp ++ ;
+		}
+		DPth.push_back( div ) ;
+		ExpD.push_back( exp ) ;
+	}
+	if( num != 1 ) {
+		DPth.push_back( num ) ;
+		Expd.push_back( 1 ) ;
+	}
+}
+
+/************************************/

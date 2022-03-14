@@ -1,0 +1,41 @@
+/************************************/
+vector<int> G[ N ] ;
+vector<int> Gt[ N ] ;
+bool vis[ N ] ;
+int id[ N ] ;
+vector<int> route ;
+int nroC ;
+
+void dfs( int from ){
+	vis[ from ] = 1 ;
+	for( int to : G[ from ] ){
+		if( vis[ to ] ) continue ;
+		dfs( to ) ;
+	}
+	route.push_back( from ) ;
+}
+
+void dfst( int from , int x ){
+	vis[ from ] = 1 ;
+	id[ from ] = x ;
+	for( int to : Gt[ from ] ){
+		if( vis[ to ] ) continue ;
+		dfst( to , x ) ;
+	}
+}
+
+void Kosaraju( int n ){
+	memset( vis , 0 , sizeof vis ) ;
+	for( int v = 1 ; v <= n ; v ++ ){
+		if( vis[ v ] ) continue ;
+		dfs( v ) ;
+	}
+	memset( vis , 0 , sizeof vis ) ;
+	reverse( route.begin() , route.end() ) ;
+	for( int v : route ){
+		if( vis[ v ] ) continue ;
+		dfst( v , nroC ++ ) ;
+	}
+}
+
+/************************************/

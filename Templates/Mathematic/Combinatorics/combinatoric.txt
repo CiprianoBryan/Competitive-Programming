@@ -1,0 +1,35 @@
+/************************************/
+int Pow( int b , int e ) {
+	int prod = 1 ;
+	for( ; e != 0 ; e >>= 1 ) {
+		if( e&1 ) prod = Mult( prod , b ) ;
+		b = Mult( b , b ) ;
+	}
+	return prod ;
+}
+
+/************************************/
+inline int inverseMod( int num , int mod ) {
+	return Pow( num , mod - 2 ) ;
+}
+
+/************************************/
+int F[ N ] ;
+int invF[ N ] ;
+
+void init( int n ) {
+	invF[ 0 ] = F[ 0 ] = 1 ;
+	for( int i = 1 ; i <= n ; i ++ ) {
+		F[ i ] = Mult( F[ i - 1 ] , i ) ;
+		invF[ i ] = Mult( invF[ i - 1 ] , inverseMod( i , MOD ) ) ;
+	}
+}
+
+/************************************/
+inline int Comb( int n , int m ) {
+	int num = F[ n ] ;
+	int inv_den = Mult( invF[ m ] , invF[ n - m ] ) ;
+	return Mult( num , inv_den ) ;
+}
+
+/************************************/
