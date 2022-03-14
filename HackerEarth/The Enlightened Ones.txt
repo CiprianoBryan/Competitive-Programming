@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 1e5 + 2;
+const int INF = 1e9 + 7;
+
+/*********************************/
+const int MAX_LEN = 1e7;
+
+int num[N];
+int n, k;
+
+int find(int number) {
+	int left = 0, right = n - 1;
+	while (left <= right) {
+		int mid = (left + right) >> 1;
+		if (number <= num[mid]) right = mid - 1;
+		else left = mid + 1;
+	}
+	return left;
+}
+
+bool ok(int len) {
+	int count = 0;
+	for (int i = 0, j; i < n; ) {
+		i = find(num[i] + 2*len + 1);
+		count ++;
+	}
+	return count <= k;
+}
+
+int main() {
+	cin >> n >> k;
+	for (int i = 0; i < n; i ++) {
+		cin >> num[i];
+	}
+	sort(num, num + n);
+	int left = 1;
+	int right = MAX_LEN;
+	while (left <= right) {
+		int mid = (left + right) >> 1;
+		if (ok(mid)) right = mid - 1;
+		else left = mid + 1;
+	}
+	cout << left;
+
+	return 0;
+}
+
+/************************** SOLUTION 2 ******************************/
+
+#include <bits/stdc++.h>
+using namespace std;
+ 
+const int N = 1e5 + 2;
+const int INF = 1e9 + 7;
+ 
+/*********************************/
+const int MAX_LEN = 1e7;
+ 
+int num[N];
+int n, k;
+ 
+bool ok(int len) {
+	int count = 0;
+	for (int i = 0, j; i < n; i = j) {
+		for (j = i; j < n && num[j] <= num[i] + 2*len; j ++);
+		count ++;
+	}
+	return count <= k;
+}
+ 
+int main() {
+	cin >> n >> k;
+	for (int i = 0; i < n; i ++) {
+		cin >> num[i];
+	}
+	sort(num, num + n);
+	int left = 1;
+	int right = MAX_LEN;
+	while (left <= right) {
+		int mid = (left + right) >> 1;
+		if (ok(mid)) right = mid - 1;
+		else left = mid + 1;
+	}
+	cout << left;
+ 
+	return 0;
+}
