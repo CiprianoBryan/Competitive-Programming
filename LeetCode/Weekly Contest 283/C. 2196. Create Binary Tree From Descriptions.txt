@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+const int MAX_NODE = 1e5;
+
+class Solution {
+public:
+    set<int> root;
+    int trie[MAX_NODE + 1][2];
+    
+    int getRoot(vector<vector<int>>& descriptions) {
+        for (vector<int> description: descriptions) {
+            root.insert(description[0]);
+            trie[description[0]][description[2]? 0: 1] = description[1];
+        }
+        for (vector<int> description: descriptions) {
+            root.erase(description[1]);
+        }
+        return (*root.begin());
+    }
+    
+    TreeNode* buildTree(int node) {
+        if (node == 0) return nullptr;
+        return new TreeNode(node, buildTree(trie[node][0]), buildTree(trie[node][1]));
+    }
+    
+    TreeNode* createBinaryTree(vector<vector<int>>& descriptions) {
+        int root = getRoot(descriptions);
+        return buildTree(root);
+    }
+};

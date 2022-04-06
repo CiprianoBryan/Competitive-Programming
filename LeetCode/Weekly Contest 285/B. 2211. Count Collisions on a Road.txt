@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int countCollisions(string directions) {
+        string s = "";
+        int ans = 0;
+        for (char &d: directions) {
+            s += d;
+            while (s.size() >= 2) {
+                int last = s.size() - 1;
+                if (s[last - 1] == 'R' && s[last] == 'L') {
+                    ans += 2;
+                    s.pop_back();
+                    s.pop_back();
+                    s.push_back('S');
+                    continue;
+                } else
+                if (s[last - 1] == 'R' && s[last] == 'S') {
+                    ans += 1;
+                    s.pop_back();
+                    s.pop_back();
+                    s.push_back('S');
+                    continue;
+                } else
+                if (s[last - 1] == 'S' && s[last] == 'L') {
+                    ans += 1;
+                    s.pop_back();
+                    s.pop_back();
+                    s.push_back('S');
+                    continue;
+                } else break;
+            }
+        }
+        return ans;
+    }
+};

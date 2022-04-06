@@ -1,0 +1,105 @@
+// PROBLEM LeetCode Weekly Contest 285 2213. Longest Substring of One Repeating Character
+#define LEFT(x) (2*x)
+#define RIGHT(x) (2*x + 1)
+
+const int N = 1e5;
+
+class Solution {
+public:
+    struct Left {
+        char value;
+        int len;
+        Left() {}
+        Left(char c, int newLen) {
+            this->value = c;
+            this->len = newLen;
+        }
+        Left(int newLen) {
+            this->len = newLen;
+        }
+    };
+    
+    struct Right {
+        char value;
+        int len;
+        Right() {}
+        Right(char c, int newLen) {
+            this->value = c;
+            this->len = newLen;
+        }
+        Right(int newLen) {
+            this->len = newLen;
+        }
+    };
+    
+    struct Node {
+        int maxLen;
+        Left left;
+        Right right;
+        Node() {}
+        Node(char c) {
+            this->maxLen = 1;
+            this->left = Left(c, 1);
+            this->right = Right(c, 1);
+        }
+    };
+    
+    Node tree[N << 2];
+    string num;
+    
+    void joinNodes(Node &node, Node &leftChild, Node &rightChild, int rangeLeft, int rangeRight) {
+        node.maxLen = max(leftChild.maxLen, rightChild.maxLen);
+        node.left = Left(leftChild.left.value, leftChild.left.len);
+        node.right = Right(rightChild.right.value, rightChild.right.len);
+        if (leftChild.right.value == rightChild.left.value) {
+            node.maxLen = max(node.maxLen, leftChild.right.len + rightChild.left.len);
+            if (leftChild.right.len == rangeLeft) node.left.len = rangeLeft + rightChild.left.len;
+            if (rightChild.right.len == rangeRight) node.right.len = rangeRight + leftChild.right.len;
+        }
+    }
+
+    void buildST(int node, int b, int e) {
+        if (b == e) {
+            tree[node] = Node(num[b-1]);
+            return;
+        }
+        int mid = (b + e) >> 1;
+        int leftChild = LEFT(node), rightChild = RIGHT(node);
+        buildST(leftChild, b, mid);
+        buildST(rightChild, mid + 1, e);
+        joinNodes(tree[node], tree[leftChild], tree[rightChild], mid-b+1, e-mid);
+    }
+
+    void update(int node, int b, int e, int pos, char &newVal) {
+        if (b == e) {
+            tree[node] = Node(newVal);
+            return;
+        }
+        int mid = (b + e) >> 1;
+        int leftChild = LEFT(node), rightChild = RIGHT(node);
+        if (pos <= mid) update(leftChild, b, mid , pos, newVal);
+        else update(rightChild, mid + 1, e, pos, newVal);
+        joinNodes(tree[node], tree[leftChild], tree[rightChild], mid-b+1, e-mid);
+    }
+
+    int query(int node, int b, int e, int l, int r) {
+        if (r < b || e < l) return 0;
+        if (l <= b && e <= r) return tree[node].maxLen;
+        int mid = (b + e) >> 1;
+        int leftChild = LEFT(node), rightChild = RIGHT(node);
+        return max(query(leftChild, b, mid, l, r), query(rightChild, mid + 1, e, l , r));
+    }
+
+    
+    vector<int> longestRepeating(string s, string queryCharacters, vector<int>& queryIndices) {
+        num = s;
+        int n = s.size();
+        buildST(1, 1, n);
+        vector<int> ans;
+        for (int i = 0; i < queryIndices.size(); i ++) {
+            update(1, 1, n, queryIndices[i] + 1, queryCharacters[i]);
+            ans.push_back(query(1, 1, n, 1, n));
+        }
+        return ans;
+    }
+};

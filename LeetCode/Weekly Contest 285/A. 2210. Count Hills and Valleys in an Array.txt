@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int countHillValley(vector<int>& nums) {
+        int ans = 0;
+        for (int i = 1; i < nums.size(); i ++) {
+            int left = i;
+            int right = i;
+            for (; right < nums.size() && nums[left] == nums[right]; right ++);
+            if (right == nums.size()) break;
+            if (nums[left - 1] < nums[i] && nums[i] > nums[right]) ans ++;
+            if (nums[left - 1] > nums[i] && nums[i] < nums[right]) ans ++;
+            i = right - 1;
+        }
+        return ans;
+    }
+};

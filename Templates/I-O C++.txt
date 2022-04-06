@@ -26,6 +26,7 @@ scanf( " %c" , &ch ) ; // leer un string o un char con un espacio delante para i
 scanf( "%s" , s + 1 ) ; // leer apartir de index 1
 scanf( "%*d %d", &n ) ; // ignorar lectura
 sscanf( s , "%d" , &n ) ; // enviar una cadena y leerla
+sscanf( ss.c_str(), "%c%d:%c%d", &col1, &row1, &col2, &row2);
 
 scanf( "%[^\n]s" , s ) ; // leer una linea, hasta el salto de linea
 getline(cin, s); // leer una linea, hasta el salto de linea

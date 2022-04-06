@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool used[1001][2001];
+    int memo[1001][2001];
+    
+    int dp(int pos, int k, vector<vector<int>>& piles) {
+        if (pos == piles.size()) return 0;
+        if (used[pos][k]) return memo[pos][k];
+        used[pos][k] = true;
+        int &ans = memo[pos][k] = dp(pos + 1, k, piles);
+        for (int coins = 1; coins <= min(k, int(piles[pos].size())); coins ++) {
+            ans = max(ans, piles[pos][coins - 1] + dp(pos + 1, k - coins, piles));
+        }
+        return ans;
+    }
+    
+    int maxValueOfCoins(vector<vector<int>>& piles, int k) {
+        for (int i = 0; i < piles.size(); i ++) {
+            for (int j = 1; j < piles[i].size(); j ++) {
+                piles[i][j] += piles[i][j - 1];
+            }
+        }
+        memset(used, 0, sizeof used);
+        return dp(0, k, piles);
+    }
+};

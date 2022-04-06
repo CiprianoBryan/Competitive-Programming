@@ -1,0 +1,27 @@
+const int INF = 2e9;
+
+class Solution {
+public:
+    long long sumNPrimeros(int n) {
+        return 1LL*n*(n+1)/2;
+    }
+    
+    long long getKSums(int &k, int a, int b) {
+        if (a > b) return 0;
+        b = min(b, a + k - 1);
+        k -= b - a + 1;
+        return sumNPrimeros(b) - sumNPrimeros(a - 1);
+    }
+    
+    long long minimalKSum(vector<int>& nums, int k) {
+        nums.push_back(0);
+        nums.push_back(INF);
+        sort(nums.begin(), nums.end());
+        long long ans = 0;
+        for (int i = 0; i < nums.size(); i ++) {
+            if (k == 0) break;
+            ans += getKSums(k, nums[i] + 1, nums[i+1] - 1);
+        }
+        return ans;
+    }
+};

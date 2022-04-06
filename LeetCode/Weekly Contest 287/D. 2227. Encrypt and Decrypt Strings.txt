@@ -1,0 +1,56 @@
+class Encrypter {
+public:
+    map<char, string> value;
+    map<string, vector<char>> key;
+    int trie[100*100][26];
+    int count[100*100];
+    
+    Encrypter(vector<char>& keys, vector<string>& values, vector<string>& dictionary) {
+        memset(trie, 0, sizeof trie);
+        memset(count, 0, sizeof count);
+        for (int i = 0; i < keys.size(); i ++) {
+            this->value[keys[i]] = values[i];
+            this->key[values[i]].push_back(keys[i]);
+        }
+        int szTrie = 1;
+        for (string &word: dictionary) {
+            int node = 0;
+            for (char c: word) {
+                if (!trie[node][c - 'a'])
+                    trie[node][c - 'a'] = szTrie++;
+                node = trie[node][c - 'a'];
+            }
+            count[node] ++;
+        }
+    }
+    
+    string encrypt(string word1) {
+        string ans;
+        for (char c: word1)
+            ans += value[c];
+        return ans;
+    }
+    
+    int dfs(string &word, int node = 0, int pos = 0) {
+        if (pos == word.size())
+            return count[node];
+        int ans = 0;
+        string id = word.substr(pos, 2);
+        for (char c: key[id]) {
+            if (trie[node][c - 'a'])
+                ans += dfs(word, trie[node][c - 'a'], pos + 2);
+        }
+        return ans;
+    }
+    
+    int decrypt(string word2) {
+        return dfs(word2);
+    }
+};
+
+/**
+ * Your Encrypter object will be instantiated and called as such:
+ * Encrypter* obj = new Encrypter(keys, values, dictionary);
+ * string param_1 = obj->encrypt(word1);
+ * int param_2 = obj->decrypt(word2);
+ */

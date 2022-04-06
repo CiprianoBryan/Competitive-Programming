@@ -1,0 +1,53 @@
+class Solution {
+public:
+    long long pot10[9];
+    
+    int find(int pos, int len, int &cant) {
+        int i = pos == 0? 1: 0;
+        for (; i <= 9; i ++) {
+            if (cant <= pot10[len]) {
+                return i;
+            }
+            cant -= pot10[len];
+        }
+        return -1;
+    }
+    
+    long long buildP(vector<int> &digs, bool imp) {
+        if (digs[0] == -1) return -1;
+        int len = digs.size() - imp;
+        for (int i = 0; i < len; i ++) {
+            digs.push_back(digs[len - 1 - i]);
+        }
+        long long ans = 0;
+        for (int dig: digs) {
+            ans = ans*10 + dig;
+        }
+        return ans;
+    }
+    
+    void build() {
+        pot10[0] = 1;
+        for (int i = 1; i < 9; i ++) {
+            pot10[i] = 10*pot10[i - 1];
+        }
+    }
+    
+    vector<long long> kthPalindrome(vector<int>& queries, int intLength) {
+        build();
+        vector<long long> ans;
+        for (int &query: queries) {
+            vector<int> num;
+            for (int i = 0; i < (intLength + 1)/2; i ++) {
+                int digit = find(i, (intLength - 1)/2 - i, query);
+                if (digit == -1) {
+                    num.push_back(-1);
+                    break;
+                }
+                num.push_back(digit);
+            }
+            ans.push_back(buildP(num, intLength&1));
+        }
+        return ans;
+    }
+};

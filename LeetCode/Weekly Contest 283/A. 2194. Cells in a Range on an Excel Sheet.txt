@@ -1,0 +1,18 @@
+class Solution {
+public:
+    vector<string> cellsInRange(string s) {
+        char col1, col2;
+        int row1, row2;
+        sscanf(s.c_str(), "%c%d:%c%d", &col1, &row1, &col2, &row2);
+        vector<string> ans;
+        for (char col = col1; col <= col2; col ++) {
+            for (int row = row1; row <= row2; row ++) {
+                string cell = "";
+                cell += col;
+                cell += '0' + row;
+                ans.push_back(cell);
+            }
+        }
+        return ans;
+    }
+};

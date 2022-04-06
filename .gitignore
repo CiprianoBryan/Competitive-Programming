@@ -1,4 +1,5 @@
 *.txt
+!/LeetCode/**/*.txt
 !/Templates/*.txt
 !/Templates/**/*.txt
 

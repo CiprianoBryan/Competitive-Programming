@@ -1,0 +1,39 @@
+const int N = 1e5;
+
+class Solution {
+public:
+    bool isOn(int &mask, int &i) {
+        return (mask >> i)&1;
+    }
+    
+    vector<int> maximumBobPoints(int numArrows, vector<int>& aliceArrows) {
+        int maxMask = (1 << 12);
+        int maxScore = 0;
+        vector<int> bobArrows(12);
+        for (int mask = 0; mask < maxMask; mask ++) {
+            int haveArrows = numArrows;
+            int scoreBob = 0;
+            for (int score = 1; score <= 11; score ++) {
+                if (isOn(mask, score) && haveArrows > aliceArrows[score]) {
+                    haveArrows -= aliceArrows[score] + 1;
+                    scoreBob += score;
+                }
+            }
+            if (scoreBob > maxScore) {
+                maxScore = scoreBob;
+                haveArrows = numArrows;
+                for (int score = 0; score <= 11; score ++) {
+                    bobArrows[score] = 0;
+                }
+                for (int score = 1; score <= 11; score ++) {
+                    if (isOn(mask, score) && haveArrows > aliceArrows[score]) {
+                        haveArrows -= aliceArrows[score] + 1;
+                        bobArrows[score] = aliceArrows[score] + 1;
+                    }
+                }
+                bobArrows[0] = haveArrows;
+            }
+        }
+        return bobArrows;
+    }
+};

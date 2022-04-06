@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int getTime(string time) {
+        int hour = stoi(time.substr(0, 2));
+        int min = stoi(time.substr(3, 2));
+        return hour*60 + min;
+    }
+    
+    int convertTime(string current, string correct) {      
+        //sscanf(current.c_str(), &hour1, &point, &min1);
+        //sscanf(correct.c_str(), &hour2, &point, &min2);
+        int time1 = getTime(current);
+        int time2 = getTime(correct);
+        if (time2 < time1)
+            time2 += 24*60;
+        vector<int> mins = {60, 15, 5, 1};
+        int ans = 0;
+        for (int &min: mins) {
+            int count = (time2 - time1)/min;
+            time1 += min*count;
+            ans += count;
+        }
+        return ans;
+    }
+};
