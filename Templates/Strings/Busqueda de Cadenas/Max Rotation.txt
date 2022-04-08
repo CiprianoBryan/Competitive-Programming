@@ -1,0 +1,26 @@
+/************************************/
+int maxRotation(string &s) {
+	s += s;
+	vector<int> F = vector<int>(s.size(), -1);
+	int index = 0;
+	for (int it = 1; it < s.size(); it ++) {
+		int len = F[it - index - 1];
+		while (len != -1 && s[it] != s[index + len + 1]) {
+			if (s[it] > s[index + len + 1])
+				index = it - len - 1;
+			len = F[len];
+		}
+		if (s[it] != s[index + len + 1]) {
+			if (s[it] > s[index])
+				index = it;
+			F[it - index] = -1;
+		} else {
+			F[it - index] = len + 1;
+		}
+	}
+	if (index > s.size()/2)
+		index -= s.size()/2;
+	return index;
+}
+
+/************************************/

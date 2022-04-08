@@ -1,0 +1,132 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 2e3 + 1;
+const int INF = 1e9 + 7;
+const int LEN_TABLE = 32;
+
+/************************************/
+bool t[N][N];
+int len[N][N][2];
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int n, m;
+	cin >> n >> m;
+	char c;
+	for (int i = 1; i <= n; i ++) {
+		for (int j = 1; j <= n; j ++) {
+			cin >> c;
+			t[i][j] = (c == '#');
+		}
+	}
+	for (int i = 1; i <= n; i ++) {
+		for (int j = 1; j <= n; j ++) {
+			int id = t[i][j];
+			len[i][j][id] = 1 + len[i-1][j][id^1];
+		}
+	}
+	int ans = 0;
+	for (int i = LEN_TABLE; i <= n; i ++) {
+		int count = 0, idExpected = 1;
+		for (int j = 1; j <= m; j ++) {
+			if (idExpected != t[i][j] || len[i][j][idExpected] < LEN_TABLE) {
+				count = 0;
+				idExpected = 1;
+				if (t[i][j] == 1 && len[i][j][idExpected] >= LEN_TABLE) {
+					count = 1;
+					idExpected = 0;
+				}
+				continue;
+			}
+			count ++;
+			idExpected ^= 1;
+			if (count == LEN_TABLE) {
+				ans ++;
+				count -= 2;
+			}
+		}
+	}
+	cout << ans;
+}
+
+
+/*****************************************/
+/********* OLD SOLUTION WITH HASH ********/
+/*****************************************/
+
+#include<bits/stdc++.h>
+using namespace std ;
+typedef long long Long ;
+
+const int N = 2e3 + 2 ;
+const int INF = 1e9 + 7 ;
+
+int T[ N ][ N ] ;
+int base = 11 ;
+Long hashP ;
+Long hashRow[ N ][ N ] ;
+Long Hash[ N ][ N ] ;
+Long potBase32 ;
+Long potBase32x32 ;
+int n , m ;
+char c ;
+
+void init() {
+	for( int i = 1 ; i <= 32 ; i ++ ) {
+		for( int j = 1 ; j <= 32 ; j ++ ) {
+			hashP = hashP*base + ( ( i + j )%2 + 1 ) ;
+		}
+	}
+	potBase32 = potBase32x32 = 1 ;
+	for( int i = 1 ; i <= 32 ; i ++ ) {
+		potBase32 *= base ;
+	}
+	for( int i = 1 ; i <= 32 ; i ++ ) {
+		potBase32x32 *= potBase32 ;
+	}
+}
+
+void buildHashRows() {
+	for( int i = 1 ; i <= n ; i ++ ) {
+		for( int j = 1 ; j <= m ; j ++ ) {
+			hashRow[ i ][ j ] = hashRow[ i ][ j - 1 ]*base + T[ i ][ j ] ;
+			if( j > 32 ) hashRow[ i ][ j ] -= T[ i ][ j - 32 ]*potBase32 ;
+		}
+	}
+}
+
+void buildHashText() {
+	for( int j = 1 ; j <= m ; j ++ ) {
+		for( int i = 1 ; i <= n ; i ++ ) {
+			Hash[ i ][ j ] = Hash[ i - 1 ][ j ]*potBase32 + hashRow[ i ][ j ] ;
+			if( i > 32 ) Hash[ i ][ j ] -= hashRow[ i - 32 ][ j ]*potBase32x32 ;
+		}
+	}
+}
+
+int main() {
+	cin >> n >> m ;
+	for( int i = 1 ; i <= n ; i ++ ) {
+		for( int j = 1 ; j <= m ; j ++ ) {
+			scanf( " %c" , &c ) ;
+			T[ i ][ j ] = ( c == '#' ) + 1 ;
+		}
+	}
+	init() ;
+	buildHashRows() ;
+	buildHashText() ;
+	int cant = 0 ;
+	for( int i = 1 ; i <= n ; i ++ ) {
+		for( int j = 1 ; j <= m ; j ++ ) {
+			if( Hash[ i ][ j ] == hashP ) {
+				cant ++ ;
+			}
+		}
+	}
+	cout << cant ;
+
+	return 0 ;
+}

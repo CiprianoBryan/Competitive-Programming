@@ -1,0 +1,36 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 2e3 + 1;
+const int INF = 1e9 + 7;
+
+/************************************/
+int buildF(string &P, int k) {
+	int maxLen = 0;
+	vector<int> F = vector<int> (P.size()) ;
+	for (int itP = 1, len = 0; itP < P.size(); itP ++) {
+		for (; len != -1 && P[itP] != P[len]; len = len? F[len-1]: -1 ) ;
+		F[itP] = ++ len;
+		if (itP < k)
+			maxLen = max(maxLen, len);
+	}
+	int len = P.size();
+	for (; len && len > maxLen; len = F[len-1]);
+	return len;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int t;
+	cin >> t;
+	string s;
+	int k;
+	while (t --) {
+		cin >> s >> k;
+		int len = buildF(s, k);
+		if (len == 0) cout << "Puchi is a cheat!\n";
+		else cout << s.substr(0, len) << endl;
+	}
+}

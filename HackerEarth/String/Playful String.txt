@@ -1,0 +1,35 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 1e6 + 2;
+const int INF = 1e9 + 7;
+
+/************************************/
+bool isOn(string &a, string &b) {
+	int itB = 0;
+	for (char &c: a) {
+		if (c == b[itB])
+			itB ++;
+		if (itB == b.size())
+			return true;
+	}
+	return false;
+}
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	cout.tie(NULL);
+	int t;
+	cin >> t;
+	string a, b;
+	while (t --) {
+		cin >> a >> b;
+		bool find = isOn(a, b);
+		reverse(b.begin(), b.end());
+		bool findRev = isOn(a, b);
+		cout << ((find && findRev)? "GOOD STRING": "BAD STRING") << endl;
+	}
+	
+	return 0;
+}

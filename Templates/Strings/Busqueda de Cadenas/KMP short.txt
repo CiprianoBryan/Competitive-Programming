@@ -1,26 +1,18 @@
-// T: text
-// P: pattern
 /************************************/
-
-vector<int> buildF(string &P) {
+vector<int> KMP(string &T, string &P) {
 	vector<int> F = vector<int> (P.size()) ;
 	for (int itP = 1, len = 0; itP < P.size(); itP ++) {
 		for (; len != -1 && P[itP] != P[len]; len = len? F[len-1]: -1 ) ;
 		F[itP] = ++ len;
 	}
-	return F;
-}
-
-vector<int> KMP(string &T, string &P) {
-	vector<int> index ;
-	vector<int> F = buildF() ;
+	vector<int> index;
 	for (int itT = 0, itP = 0; itT < T.size(); itT ++) {
 		for( ; itP != -1 && T[itT] != P[itP] ; itP = itP? F[itP-1]: -1);
 		if (P.size() == ++ itP) {
 			index.push_back(itT-itP) ;
-			itP = F[itP - 1];
+			itP = F[itP-1];
 		}
 	}
-	return index ;
+	return index;
 }
 /************************************/

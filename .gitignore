@@ -1,5 +1,6 @@
 *.txt
 !/LeetCode/**/*.txt
+!/HackerEarth/**/*.txt
 !/Templates/*.txt
 !/Templates/**/*.txt
 

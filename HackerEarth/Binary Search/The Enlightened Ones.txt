@@ -22,7 +22,7 @@ int find(int number) {
 
 bool ok(int len) {
 	int count = 0;
-	for (int i = 0, j; i < n; ) {
+	for (int i = 0; i < n; ) {
 		i = find(num[i] + 2*len + 1);
 		count ++;
 	}

@@ -7,3 +7,9 @@ Z[ i ] : longitud de la subcadena mas larga que comienza en i y es tambien un pr
 *Z[ 0 ] = 0
 *string = ax10 , Z[ 1 ] = 9 , Z[ 2 ] = 8 ...
 
+**************************** KMP:
+Fi is know such that:
+* Z(0,1, ..., Fi-1) = Z(i-Fi+1, ..., i) for string Z
+Fi is longest preffix and suffix of string Z
+
+
