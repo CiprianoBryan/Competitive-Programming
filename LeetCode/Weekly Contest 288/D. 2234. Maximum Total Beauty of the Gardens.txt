@@ -1,0 +1,57 @@
+const int N = 1e5;
+const int INF = 1e9;
+
+class Solution {
+public:
+    int cnt[N + 1];
+    long long usedFlows[N + 1];
+    int minIncomp;
+    vector<int> height;
+    
+    int getNewMin(long long &newFlowers, int posR, int &target) {
+        if (posR == -1) return 0;
+        int left = minIncomp, right = height[posR];
+        while (left <= right) {
+            int mid = (left + right) >> 1;
+            if (usedFlows[mid] <= newFlowers) left = mid + 1;
+            else right = mid - 1;
+        }
+        if (right == height[posR])
+            right += min(1LL*target, (newFlowers - usedFlows[right])/(posR + 1));
+        return min(right, target - 1);
+    }
+    
+    long long maximumBeauty(vector<int>& flowers, long long newFlowers, int target, int full, int partial) {
+        int nComp = 0;
+        minIncomp = INF;
+        height.clear();
+        for (int &f: flowers) {
+            if (f >= target) {
+                nComp ++;
+            } else {
+                minIncomp = min(minIncomp, f);
+                height.push_back(f);
+                cnt[f] ++;
+            }
+        }
+        if (minIncomp == INF) {
+            return 1LL*nComp*full;
+        }
+        sort(height.begin(), height.end());
+        usedFlows[minIncomp] = 0;
+        for (int len = minIncomp + 1; len <= height.back(); len ++) {
+            usedFlows[len] = usedFlows[len - 1] + cnt[len-1];
+            cnt[len] += cnt[len-1];
+        }
+        long long ans = 0;
+        int cntIncomp = height.size();
+        for (int i = cntIncomp; i >= 0; i --) {
+            newFlowers -= (i == cntIncomp)? 0: target - height[i];
+            if (newFlowers < 0) break;
+            long long addCntComp = cntIncomp - i;
+            long long newMinIncomp = getNewMin(newFlowers, i - 1, target);
+            ans = max(ans, (nComp + addCntComp)*full + newMinIncomp*partial);
+        }
+        return ans;
+    }
+};

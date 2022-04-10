@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int stoi(string s) {
+        int num = 0;
+        for (char &c: s)
+            num = num*10 + (c-'0');
+        return num;
+    }
+    
+    string minimizeResult(string expression) {
+        int posPlus = 0;
+        for (; posPlus < expression.size(); posPlus ++)
+            if (expression[posPlus] == '+')
+                break;
+        string ans;
+        long long val = 1e18;
+        for (int i = 0; i < posPlus; i ++) {
+            for (int j = posPlus + 1; j < expression.size(); j ++) {
+                int num1 = i == 0? 1: stoi(expression.substr(0, i));
+                int num2 = stoi(expression.substr(i, posPlus - i));
+                int num3 = stoi(expression.substr(posPlus + 1, j - posPlus));
+                int num4 = j == expression.size() - 1? 1: stoi(expression.substr(j + 1, expression.size() - (j+1)));
+                if (num1*(num2 + num3)*num4 < val) {
+                    val = num1*(num2 + num3)*num4;
+                    ans = expression;
+                    ans.insert(i, "(");
+                    ans.insert(j + 2, ")");
+                }
+            }
+        }
+        return ans;
+    }
+};

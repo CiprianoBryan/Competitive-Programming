@@ -1,0 +1,19 @@
+const int MOD = 1e9 + 7;
+
+class Solution {
+public:
+    int maximumProduct(vector<int>& nums, int k) {
+        multiset<int> s;
+        for (int &num: nums)
+            s.insert(num);
+        for (int i = 0; i < k; i ++) {
+            int num = (*s.begin());
+            s.erase(s.begin());
+            s.insert(num + 1);
+        }
+        int ans = 1;
+        for (int num: s)
+            ans = (1LL*ans*num)%MOD;
+        return ans;
+    }
+};
