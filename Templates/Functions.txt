@@ -1,0 +1,10 @@
+to_string(int number): string => retorna el número convertido en string
+stoi(string number): int => retorna el número en string a entero
+
+isalpha(char c): bool => indica si es una letra
+islower(char c): bool => indica si es una letra minúscula
+isupper(char c): bool => indica si es una letra mayúscula
+tolower(char c): char => retorna la letra en minúscula
+toupper(char c): char => retorna la letra en mayúscula
+
+isdigit(char c): bool => indica si es un dígito

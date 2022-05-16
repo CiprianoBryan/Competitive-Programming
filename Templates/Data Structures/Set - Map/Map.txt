@@ -1,0 +1,80 @@
+// https://leetcode.com/problems/count-integers-in-intervals/submissions/
+
+const map<int, int>::iterator NULL_ITERATOR;
+
+class CountIntervals {
+public:
+  map<int, int> interval;
+  int totalNumbers;
+  
+  map<int, int>::iterator iteratorEqualsOrBeforeThat(int value) {
+    auto it = interval.upper_bound(value);
+    if (it == interval.begin()) return NULL_ITERATOR;
+    return (-- it);
+  }
+  
+  map<int, int>::iterator iteratorEqualsOrAfterThat(int value) {
+    auto it = interval.lower_bound(value);
+    if (it == interval.end()) return NULL_ITERATOR;
+    return it;
+  }
+  
+  map<int, int>::iterator iteratorBeforeThat(int value) {
+    auto it = interval.lower_bound(value);
+    if (it == interval.begin()) return NULL_ITERATOR;
+    return (-- it);
+  }
+  
+  map<int, int>::iterator iteratorAfterThat(int value) {
+    auto it = interval.upper_bound(value);
+    if (it == interval.end()) return NULL_ITERATOR;
+    return it;
+  }
+  
+  
+  CountIntervals() {
+    interval.clear();
+    totalNumbers = 0;
+  }
+
+  void add(int left, int right) {
+    if (interval.empty()) {
+      interval.insert({left, right});
+      totalNumbers += right - left + 1;
+      return;
+    }
+    
+    // CASE 1 interval_left <= left && right <= inteval_right
+    auto it = iteratorEqualsOrBeforeThat(left); // it->first <= left
+    if (it != NULL_ITERATOR && right <= it->second) {
+      return;
+    }
+    
+    // CASE 2 interval_left < left && left <= interval_right
+    int newIntervalLeft = left;
+    it = iteratorBeforeThat(left); // interval_left < left
+    if (it != NULL_ITERATOR && left <= it->second) {
+      newIntervalLeft = it->first;
+      totalNumbers -= (it->second) - (it->first) + 1;
+      interval.erase(it);
+    }
+    
+    // CASE 3 left <= interval_left && interval_left <= right
+    int newIntervalRight = right;
+    while (!interval.empty()) {
+      it = iteratorEqualsOrAfterThat(left); // left <= interval_left
+      if (it == NULL_ITERATOR || !(it->first <= right)) break;
+      newIntervalRight = max(right, it->second);
+      totalNumbers -= (it->second) - (it->first) + 1;
+      interval.erase(it);
+    }
+    
+    // CASE 4 add new interval
+    interval.insert({newIntervalLeft, newIntervalRight});
+    totalNumbers += newIntervalRight - newIntervalLeft + 1;
+  }
+
+  int count() {
+    return totalNumbers;
+  }
+};

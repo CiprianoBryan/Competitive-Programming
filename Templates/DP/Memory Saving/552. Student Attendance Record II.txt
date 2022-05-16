@@ -1,0 +1,58 @@
+// https://leetcode.com/problems/student-attendance-record-ii/
+/*
+A absent
+L later
+P present
+
+1.criteria: fewer 2 days absent "total"
+2.criteria: 3 or more "consecutive" days never later
+
+return number of attendance record, where attendance record is a string of lenght (n) -> input
+
+save:
+1. day -> [0,...,n-1]
+2. number of absent [0,1,2] -> 2 -> NO ATTENDANCE RECORD
+3. late days consecutives [0,1,2,3] -> 3 -> NO ATTENDANCE RECORD
+
+// day:
+P  (day,absent,consLaters) -> (day+1,absent,0) 
+A  (day,absent,consLaters) -> (day+1,absent+1,0) 
+L  (day,absent,consLaters) -> (day+1,absent,consLater+1)
+
+day == n / solution -> 1 X
+absent == 2 / no solution -> 0 X
+consecLaters == 3 / no solution -> 0 X
+
+Time Comp. O(n)
+Capacity complex. O(n), n = number of days
+
+*/
+
+const int MOD = 1e9+7;
+const int MAX_DAYS_ABSENT = 1;
+const int MAX_DAYS_LATER = 2;
+
+class Solution {
+public:
+    int dp[2][2][3];
+  
+    int checkRecord(int n) {
+      for (int absent = 0; absent <= MAX_DAYS_ABSENT; absent ++) {
+        for (int later = 0; later <= MAX_DAYS_LATER; later ++) {
+          dp[0][absent][later] = 1;
+        }
+      }
+      for (int day = n - 1; day >= 0; day --) {
+        memcpy(dp[1], dp[0], sizeof dp[0]);
+        for (int absent = 0; absent <= MAX_DAYS_ABSENT; absent ++) {
+          for (int later = 0; later <= MAX_DAYS_LATER; later ++) {
+            int &ans = dp[0][absent][later] = 0;
+            ans = (ans + dp[1][absent][0])%MOD; // day: present
+            ans = (ans + (absent == MAX_DAYS_ABSENT? 0: dp[1][absent+1][0]))%MOD; // day: absent
+            ans = (ans + (later == MAX_DAYS_LATER? 0: dp[1][absent][later+1]))%MOD; // day: later
+          }
+        }
+      }
+      return dp[0][0][0];
+    }
+};
